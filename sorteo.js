@@ -161,3 +161,5 @@ function enviarCorreo(email, nombre, amigoInvisible) {
             }
         );
 }
+//Hola {{to_name}}, tu amigo invisible es --------------------------------------------------------------------------------------------------------------------------------------------> 
+//{{amigo_invisible}}.
