@@ -3,19 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Sorteo del amigo invisible</title>
     <link rel="stylesheet" href="sorteo.css">
-    <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script> 
-    <script type="text/javascript"> (function(){ emailjs.init("AMjwvpq1VTFwL9L2K"); })(); </script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+    <script type="text/javascript">
+        (function() {
+            emailjs.init("AMjwvpq1VTFwL9L2K");
+        })();
+    </script>
 </head>
 <body>
     <div id="contenedor">
         <h1>Sorteo del amigo invisible</h1>
-        <p class="parrafo">Introduce el número de participantes: </p> <input id="numParticipantes" type="text">
-    
+        <p class="parrafo">Introduce el número de participantes:</p> 
+        <input id="numParticipantes" type="text">
         <button id="introducir">Introducir</button><br>
     </div>
-    <div id="contenedorInput"></div>
+    <div id="contenedorInput">
+        
+    </div>
+    <button id="sortear" style="display: none;">Realizar Sorteo</button>
     <script src="sorteo.js"></script>
 </body>
 </html>

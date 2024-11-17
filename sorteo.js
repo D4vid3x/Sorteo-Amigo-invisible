@@ -1,6 +1,7 @@
 // Tu Public Key de EmailJS
-const emailjsPublicKey = "AMjwvpq1VTFwL9L2K";
-emailjs.init(emailjsPublicKey);
+//const emailjsPublicKey = "AMjwvpq1VTFwL9L2K";
+emailjs.init('AMjwvpq1VTFwL9L2K');
+
 
 let participantes = [];
 
@@ -8,7 +9,7 @@ let participantes = [];
 let contenedor = document.getElementById("contenedor");
 let contenedorInput = document.getElementById("contenedorInput");
 let introducir = document.getElementById("introducir");
-
+let sortear = document.getElementById("sortear");
 introducir.addEventListener("click", function () {
     let numParticipantes = parseInt(
         document.getElementById("numParticipantes").value
@@ -44,29 +45,34 @@ introducir.addEventListener("click", function () {
         contenedorInput.appendChild(saltoDeLinea);
     }
 
-    // Crear botón para realizar el sorteo
-    let sortear = document.createElement("button");
-    sortear.id = "sortear";
-    sortear.textContent = "Realizar sorteo";
+    // Mostrar botón para realizar el sorteo
+    sortear.style.display = "block"; // Mostrar el botón
     sortear.style.padding = "3px";
-    contenedorInput.appendChild(sortear);
+
+    console.log("Botón de sorteo mostrado:", sortear.style.display); // Confirmar
 
     // Ocultar botón "Introducir"
     introducir.style.display = "none";
-
-    // Agregar evento al botón de sorteo
-    sortear.addEventListener("click", function () {
-        guardarParticipantes(); // Guardar los participantes antes del sorteo
-        realizarSorteo(); // Realizar el sorteo y enviar los correos
-    });
 });
+
 
 // Guardar los participantes
 function guardarParticipantes() {
     participantes = []; // Limpiar el array antes de guardar
 
-    let inputsNombre = document.querySelectorAll("input[type='text']");
-    let inputsEmail = document.querySelectorAll("input[type='email']");
+    // Limitar la búsqueda a los inputs dentro de contenedorInput
+    let inputsNombre = contenedorInput.querySelectorAll("input[type='text']");
+    let inputsEmail = contenedorInput.querySelectorAll("input[type='email']");
+
+    console.log("Inputs de nombres:", inputsNombre.length);
+    console.log("Inputs de emails:", inputsEmail.length);
+
+    if (inputsNombre.length !== inputsEmail.length) {
+        alert("El número de campos de nombre y email no coincide.");
+        return false;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     for (let i = 0; i < inputsNombre.length; i++) {
         let nombre = inputsNombre[i].value.trim();
@@ -74,18 +80,23 @@ function guardarParticipantes() {
 
         if (nombre === "" || email === "") {
             alert("Por favor, completa todos los campos.");
-            return;
+            return false;
+        }
+
+        if (!emailRegex.test(email)) {
+            alert("Por favor, introduce un email válido.");
+            return false;
         }
 
         participantes.push({ nombre, email });
     }
 
     console.log(participantes);
-    alert("Datos guardados correctamente.");
+    return true;
 }
-
 // Realizar el sorteo y enviar los correos
-function realizarSorteo() {
+sortear.addEventListener("click", function () {
+    if (!guardarParticipantes()) return; // Guardar los participantes antes del sorteo
     if (participantes.length < 2) {
         alert("Debe haber al menos 2 participantes para el sorteo.");
         return;
@@ -105,12 +116,12 @@ function realizarSorteo() {
     });
 
     alert("Los correos han sido enviados.");
-}
+});
 
 // Enviar correo con EmailJS
 function enviarCorreo(email, nombre, amigoInvisible) {
     emailjs
-        .send("service_lhn3yof", "template_g90zaqy", {
+        .send("service_lhn3yof", "template_8v4y25z", {
             to_email: email,
             to_name: nombre,
             amigo_invisible: amigoInvisible,
