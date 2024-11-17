@@ -1,7 +1,6 @@
 // Tu Public Key de EmailJS
-//const emailjsPublicKey = "AMjwvpq1VTFwL9L2K";
-emailjs.init('AMjwvpq1VTFwL9L2K');
-
+const emailjsPublicKey = "E-KPQKvsslVLSUnZ2";
+emailjs.init(emailjsPublicKey);
 
 let participantes = [];
 
@@ -10,6 +9,7 @@ let contenedor = document.getElementById("contenedor");
 let contenedorInput = document.getElementById("contenedorInput");
 let introducir = document.getElementById("introducir");
 let sortear = document.getElementById("sortear");
+
 introducir.addEventListener("click", function () {
     let numParticipantes = parseInt(
         document.getElementById("numParticipantes").value
@@ -55,7 +55,6 @@ introducir.addEventListener("click", function () {
     introducir.style.display = "none";
 });
 
-
 // Guardar los participantes
 function guardarParticipantes() {
     participantes = []; // Limpiar el array antes de guardar
@@ -94,6 +93,37 @@ function guardarParticipantes() {
     console.log(participantes);
     return true;
 }
+
+// Función para barajar los participantes y asegurarse de que no se asignen a sí mismos
+function mezclarYAsignar(participantes) {
+    let shuffled = [...participantes];
+    let n = shuffled.length;
+
+    // Realizamos el barajado con Fisher-Yates
+    for (let i = n - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]; // Intercambiar
+    }
+
+    // Comprobar si algún participante está asignado a sí mismo y hacer ajustes
+    let asignacionesCorrectas = false;
+
+    while (!asignacionesCorrectas) {
+        asignacionesCorrectas = true; // Suponemos que las asignaciones están bien
+
+        for (let i = 0; i < n; i++) {
+            if (shuffled[i] === participantes[i]) {
+                // Si alguien está asignado a sí mismo, hacemos un intercambio
+                asignacionesCorrectas = false; // Necesitamos ajustar
+                const tempIndex = (i + 1) % n; // Tomamos el siguiente participante
+                [shuffled[i], shuffled[tempIndex]] = [shuffled[tempIndex], shuffled[i]]; // Intercambiamos
+            }
+        }
+    }
+
+    return shuffled;
+}
+
 // Realizar el sorteo y enviar los correos
 sortear.addEventListener("click", function () {
     if (!guardarParticipantes()) return; // Guardar los participantes antes del sorteo
@@ -102,16 +132,12 @@ sortear.addEventListener("click", function () {
         return;
     }
 
-    // Mezclar los participantes
-    let shuffled = [...participantes];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
+    // Mezclar los participantes y asignar amigos invisibles
+    let shuffled = mezclarYAsignar(participantes);
 
     // Enviar correos
     participantes.forEach((participante, i) => {
-        const amigoInvisible = shuffled[(i + 1) % shuffled.length]; // Siguiente en la lista
+        const amigoInvisible = shuffled[i]; // Aseguramos que no sea el mismo
         enviarCorreo(participante.email, participante.nombre, amigoInvisible.nombre);
     });
 
@@ -121,7 +147,7 @@ sortear.addEventListener("click", function () {
 // Enviar correo con EmailJS
 function enviarCorreo(email, nombre, amigoInvisible) {
     emailjs
-        .send("service_lhn3yof", "template_8v4y25z", {
+        .send("service_ync5bvi", "template_dbn1pki", {
             to_email: email,
             to_name: nombre,
             amigo_invisible: amigoInvisible,
